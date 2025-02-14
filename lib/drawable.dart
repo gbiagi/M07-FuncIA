@@ -13,8 +13,8 @@ class Line extends Drawable {
   Line({
     required this.start,
     required this.end,
-    this.color = Colors.black,
-    this.strokeWidth = 2.0,
+    required this.color,
+    required this.strokeWidth,
   });
 
   @override
@@ -30,18 +30,21 @@ class Rectangle extends Drawable {
   final Offset topLeft;
   final Offset bottomRight;
   final Color color;
+  final double strokeWidth;
 
   Rectangle({
     required this.topLeft,
     required this.bottomRight,
-    this.color = Colors.black,
+    required this.color,
+    required this.strokeWidth,
   });
 
   @override
   void draw(Canvas canvas) {
     final paint = Paint()
       ..color = color
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
     canvas.drawRect(
       Rect.fromPoints(topLeft, bottomRight),
       paint,
@@ -57,7 +60,7 @@ class Circle extends Drawable {
   Circle({
     required this.center,
     required this.radius,
-    this.color = Colors.black,
+    required this.color,
   });
 
   @override

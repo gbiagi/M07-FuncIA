@@ -11,9 +11,10 @@ const tools = [
         "properties": {
           "x": {"type": "number"},
           "y": {"type": "number"},
-          "radius": {"type": "number"}
+          "radius": {"type": "number"},
+          "color": {"type": "string"}
         },
-        "required": ["x", "y", "radius"]
+        "required": ["x", "y", "radius", "color"]
       }
     }
   },
@@ -30,8 +31,10 @@ const tools = [
           "startY": {"type": "number"},
           "endX": {"type": "number"},
           "endY": {"type": "number"},
+          "color": {"type": "string"},
+          "thickness": {"type": "number"}
         },
-        "required": ["startX", "startY", "endX", "endY"]
+        "required": ["startX", "startY", "endX", "endY", "color", "thickness"]
       }
     }
   },
@@ -48,8 +51,10 @@ const tools = [
           "topLeftY": {"type": "number"},
           "bottomRightX": {"type": "number"},
           "bottomRightY": {"type": "number"},
+          "color": {"type": "string"},
+          "thickness": {"type": "number"}
         },
-        "required": ["topLeftX", "topLeftY", "bottomRightX", "bottomRightY"]
+        "required": ["topLeftX", "topLeftY", "bottomRightX", "bottomRightY", "color", "thickness"]
       }
     }
   }

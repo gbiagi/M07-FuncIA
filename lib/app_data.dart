@@ -197,7 +197,8 @@ class AppData extends ChangeNotifier {
           final dx = parseDouble(parameters['x']);
           final dy = parseDouble(parameters['y']);
           final radius = max(0.0, parseDouble(parameters['radius']));
-          addDrawable(Circle(center: Offset(dx, dy), radius: radius));
+          final color = (parameters['color']);
+          addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color)));
         } else {
           print("Missing circle properties: $parameters");
         }
@@ -214,7 +215,10 @@ class AppData extends ChangeNotifier {
           final endY = parseDouble(parameters['endY']);
           final start = Offset(startX, startY);
           final end = Offset(endX, endY);
-          addDrawable(Line(start: start, end: end));
+          final color = (parameters['color']);
+          final thickness = parseDouble(parameters['thickness']);
+
+          addDrawable(Line(start: start, end: end, color: getColor(color), strokeWidth: thickness));
         } else {
           print("Missing line properties: $parameters");
         }
@@ -231,7 +235,9 @@ class AppData extends ChangeNotifier {
           final bottomRightY = parseDouble(parameters['bottomRightY']);
           final topLeft = Offset(topLeftX, topLeftY);
           final bottomRight = Offset(bottomRightX, bottomRightY);
-          addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight));
+          final color = (parameters['color']);
+          final thickness = parseDouble(parameters['thickness']);
+          addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness));
         } else {
           print("Missing rectangle properties: $parameters");
         }
@@ -241,4 +247,34 @@ class AppData extends ChangeNotifier {
         print("Unknown function call: ${fixedJson['name']}");
     }
   }
+
+  Color getColor(String color) {
+    switch (color.toLowerCase()) {
+      case 'red':
+      return Colors.red;
+      case 'green':
+      return Colors.green;
+      case 'blue':
+      return Colors.blue;
+      case 'yellow':
+      return Colors.yellow;
+      case 'black':
+      return Colors.black;
+      case 'white':
+      return Colors.white;
+      case 'purple':
+      return Colors.purple;
+      case 'orange':
+      return Colors.orange;
+      case 'pink':
+      return Colors.pink;
+      case 'brown':
+      return Colors.brown;
+      case 'grey':
+      return Colors.grey;
+      default:
+      return Colors.transparent; // Default color if no match is found
+    }
+  }
+  
 }
