@@ -299,10 +299,11 @@ class AppData extends ChangeNotifier {
           final dx = parseDouble(parameters['x']);
           final dy = parseDouble(parameters['y']);
           Offset position = Offset(dx, dy);
-          if (parameters['color'] != null && parameters['fontSize'] != null) {
+          if (parameters['color'] != null && parameters['fontSize'] != null && parameters['font'] != null) {
             final color = (parameters['color']);
             final fontSize = parseDouble(parameters['fontSize']);
-            addDrawable(TextElement(position: position, text: text, color: getColor(color), fontSize: fontSize));
+            final font = (parameters['font']);
+            addDrawable(TextElement(position: position, text: text, color: getColor(color), fontSize: fontSize, font: font));
           } else {
             addDrawable(TextElement(position: position, text: text));
           }

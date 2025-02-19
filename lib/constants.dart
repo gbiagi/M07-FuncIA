@@ -78,6 +78,7 @@ const tools = [
           "x": {"type": "number"},
           "y": {"type": "number"},
           "color": {"type": "string"},
+          "font": {"type": "string"},
           "fontSize": {"type": "number"},
         },
         "required": ["text", "x", "y"]

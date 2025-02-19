@@ -99,12 +99,14 @@ class TextElement extends Drawable {
   final Offset position;
   final Color color;
   final double fontSize;
+  final String font;
 
   TextElement({
     required this.text,
     required this.position,
     this.color = Colors.black,
     this.fontSize = 14.0,
+    this.font = 'Roboto',
   });
 
   @override
@@ -112,6 +114,7 @@ class TextElement extends Drawable {
     final textStyle = TextStyle(
       color: color,
       fontSize: fontSize,
+      fontFamily: font
     );
     final textSpan = TextSpan(
       text: text,
