@@ -64,5 +64,24 @@ const tools = [
         "required": ["topLeftX", "topLeftY", "bottomRightX", "bottomRightY", "color", "thickness"]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "draw_text",
+      "description":
+          "Dibuixa un text en una posició determinada",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {"type": "string"},
+          "x": {"type": "number"},
+          "y": {"type": "number"},
+          "color": {"type": "string"},
+          "fontSize": {"type": "number"},
+        },
+        "required": ["text", "x", "y"]
+      }
+    }
   }
 ];

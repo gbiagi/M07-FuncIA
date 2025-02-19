@@ -291,8 +291,24 @@ class AppData extends ChangeNotifier {
         }
         break;
 
-      case 'write_text':
-        
+      case 'draw_text':
+        if (parameters['text'] != null &&
+            parameters['x'] != null &&
+            parameters['y'] != null) {
+          final text = (parameters['text']);
+          final dx = parseDouble(parameters['x']);
+          final dy = parseDouble(parameters['y']);
+          Offset position = Offset(dx, dy);
+          if (parameters['color'] != null && parameters['fontSize'] != null) {
+            final color = (parameters['color']);
+            final fontSize = parseDouble(parameters['fontSize']);
+            addDrawable(TextElement(position: position, text: text, color: getColor(color), fontSize: fontSize));
+          } else {
+            addDrawable(TextElement(position: position, text: text));
+          }
+        } else {
+          print("Missing text properties: $parameters");
+        }
       break;
 
       default:
