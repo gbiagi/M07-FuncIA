@@ -31,24 +31,32 @@ class Rectangle extends Drawable {
   final Offset bottomRight;
   final Color color;
   final double strokeWidth;
+  final Color fill;
+  final Gradient gradient;
 
   Rectangle({
     required this.topLeft,
     required this.bottomRight,
     required this.color,
     required this.strokeWidth,
+    this.fill = Colors.transparent,
+    this.gradient = const LinearGradient(colors: [Colors.transparent, Colors.transparent]),
   });
 
   @override
   void draw(Canvas canvas) {
-    final paint = Paint()
+    final rect = Rect.fromPoints(topLeft, bottomRight);
+
+    final gradientPaint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.fill;
+    canvas.drawRect(rect, gradientPaint);
+
+    final borderPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
-    canvas.drawRect(
-      Rect.fromPoints(topLeft, bottomRight),
-      paint,
-    );
+    canvas.drawRect(rect, borderPaint);
   }
 }
 
@@ -56,19 +64,33 @@ class Circle extends Drawable {
   final Offset center;
   final double radius;
   final Color color;
+  final Color fill;
+  final double thickness;
+  final Gradient gradient;
+
 
   Circle({
     required this.center,
     required this.radius,
     required this.color,
+    this.fill = Colors.transparent,
+    this.thickness = 2.0,
+    this.gradient = const RadialGradient(colors: [Colors.transparent, Colors.transparent]),
   });
 
   @override
   void draw(Canvas canvas) {
-    final paint = Paint()
-      ..color = color
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    final gradientPaint = Paint()
+      ..shader = gradient.createShader(rect)
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(center, radius, paint);
+    canvas.drawCircle(center, radius, gradientPaint);
+
+    final borderPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = thickness;
+    canvas.drawCircle(center, radius, borderPaint);
   }
 }
 

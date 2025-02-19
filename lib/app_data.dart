@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -198,7 +200,32 @@ class AppData extends ChangeNotifier {
           final dy = parseDouble(parameters['y']);
           final radius = max(0.0, parseDouble(parameters['radius']));
           final color = (parameters['color']);
-          addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color)));
+          if (parameters["gradientType"] != null && 
+            parameters["gradientColor"] != null && 
+            parameters['fill'] != null && 
+            parameters['thickness'] != null)  {
+              final gradientType = (parameters['gradientType']);
+              final gradientColor = (parameters['gradientColor']);
+              final fill = (parameters['fill']);
+              final thickness = parseDouble(parameters['thickness']);
+              Gradient gradient;
+              switch (gradientType) {
+                case 'radial':
+                  gradient = RadialGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                  break;
+                case 'linear':
+                  gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                  break;
+                case 'sweep':
+                  gradient = SweepGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                  break;
+                default:
+                  gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                }
+                addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color), fill: getColor(fill), thickness: parseDouble(thickness), gradient: gradient));
+          } else {
+            addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color)));
+          }
         } else {
           print("Missing circle properties: $parameters");
         }
@@ -217,7 +244,6 @@ class AppData extends ChangeNotifier {
           final end = Offset(endX, endY);
           final color = (parameters['color']);
           final thickness = parseDouble(parameters['thickness']);
-
           addDrawable(Line(start: start, end: end, color: getColor(color), strokeWidth: thickness));
         } else {
           print("Missing line properties: $parameters");
@@ -237,11 +263,37 @@ class AppData extends ChangeNotifier {
           final bottomRight = Offset(bottomRightX, bottomRightY);
           final color = (parameters['color']);
           final thickness = parseDouble(parameters['thickness']);
-          addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness));
+          if (parameters['fill'] != null && parameters['gradientType'] != null && parameters['gradientColor'] != null) {
+            final fill = (parameters['fill']);
+            final gradientType = (parameters['gradientType']);
+            final gradientColor = (parameters['gradientColor']);
+            Gradient gradient;
+            switch (gradientType) {
+              case 'radial':
+                gradient = RadialGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              case 'linear':
+                gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              case 'sweep':
+                gradient = SweepGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              default:
+                gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
+              }
+
+            addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness, fill: getColor(fill), gradient: gradient));  
+          } else {
+            addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness));
+          }
         } else {
           print("Missing rectangle properties: $parameters");
         }
         break;
+
+      case 'write_text':
+        
+      break;
 
       default:
         print("Unknown function call: ${fixedJson['name']}");

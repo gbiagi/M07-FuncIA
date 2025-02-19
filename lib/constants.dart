@@ -12,7 +12,11 @@ const tools = [
           "x": {"type": "number"},
           "y": {"type": "number"},
           "radius": {"type": "number"},
-          "color": {"type": "string"}
+          "color": {"type": "string"},
+          "fill": {"type": "string"},
+          "thickness": {"type": "number"},
+          "gradientType": {"type": "string"},
+          "gradientColor": {"type": "string"},
         },
         "required": ["x", "y", "radius", "color"]
       }
@@ -52,7 +56,10 @@ const tools = [
           "bottomRightX": {"type": "number"},
           "bottomRightY": {"type": "number"},
           "color": {"type": "string"},
-          "thickness": {"type": "number"}
+          "thickness": {"type": "number"},
+          "fill": {"type": "string"},
+          "gradientType": {"type": "string"},
+          "gradientColor": {"type": "string"},
         },
         "required": ["topLeftX", "topLeftY", "bottomRightX", "bottomRightY", "color", "thickness"]
       }
