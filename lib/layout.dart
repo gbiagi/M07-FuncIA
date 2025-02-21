@@ -19,6 +19,7 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   Drawable? selectedDrawable;
+  Offset? startDragOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,24 @@ class _LayoutState extends State<Layout> {
                                 CanvasPainter(drawables: appData.drawables);
                             painter.selectDrawable(details.localPosition);
                             selectedDrawable = painter.selectedDrawable;
+                            startDragOffset = details.localPosition;
+
                             print("Selected $selectedDrawable");
                           });
+                        },
+                        onPanUpdate: (details) {
+                          if (selectedDrawable != null &&
+                              startDragOffset != null) {
+                            setState(() {
+                              final offset =
+                                  details.localPosition - startDragOffset!;
+                              selectedDrawable!.move(offset);
+                              startDragOffset = details.localPosition;
+                            });
+                          }
+                        },
+                        onPanEnd: (details) {
+                          startDragOffset = null;
                         },
                         child: CustomPaint(
                           painter: CanvasPainter(

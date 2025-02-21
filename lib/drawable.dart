@@ -4,11 +4,12 @@ abstract class Drawable {
   void draw(Canvas canvas);
   bool contains(Offset position);
   Rect getBounds();
+  void move(Offset offset);
 }
 
 class Line extends Drawable {
-  final Offset start;
-  final Offset end;
+  Offset start;
+  Offset end;
   final Color color;
   final double strokeWidth;
 
@@ -39,11 +40,17 @@ class Line extends Drawable {
   Rect getBounds() {
     return Rect.fromPoints(start, end).inflate(strokeWidth / 2);
   }
+
+  @override
+  void move(Offset offset) {
+    start += offset;
+    end += offset;
+  }
 }
 
 class Rectangle extends Drawable {
-  final Offset topLeft;
-  final Offset bottomRight;
+  Offset topLeft;
+  Offset bottomRight;
   final Color color;
   final double strokeWidth;
   final Color fill;
@@ -85,10 +92,16 @@ class Rectangle extends Drawable {
   Rect getBounds() {
     return Rect.fromPoints(topLeft, bottomRight);
   }
+
+  @override
+  void move(Offset offset) {
+    topLeft += offset;
+    bottomRight += offset;
+  }
 }
 
 class Circle extends Drawable {
-  final Offset center;
+  Offset center;
   final double radius;
   final Color color;
   final Color fill;
@@ -129,11 +142,16 @@ class Circle extends Drawable {
   Rect getBounds() {
     return Rect.fromCircle(center: center, radius: radius);
   }
+
+  @override
+  void move(Offset offset) {
+    center += offset;
+  }
 }
 
 class TextElement extends Drawable {
   final String text;
-  final Offset position;
+  Offset position;
   final Color color;
   final double fontSize;
   final String font;
@@ -193,5 +211,10 @@ class TextElement extends Drawable {
     );
     textPainter.layout();
     return Offset(position.dx, position.dy) & textPainter.size;
+  }
+
+  @override
+  void move(Offset offset) {
+    position += offset;
   }
 }

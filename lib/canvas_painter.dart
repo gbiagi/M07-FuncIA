@@ -14,6 +14,7 @@ class CanvasPainter extends CustomPainter {
     for (var drawable in drawables) {
       drawable.draw(canvas);
     }
+
     if (selectedDrawable != null) {
       final rect = selectedDrawable!.getBounds();
       final paint = Paint()
