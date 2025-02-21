@@ -2,6 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
@@ -113,13 +114,48 @@ class _LayoutState extends State<Layout> {
                           width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CDKFieldText(
-                              maxLines: 5,
-                              controller: textController,
-                              placeholder: placeholders[
-                                  random.nextInt(placeholders.length)],
-                              enabled:
-                                  !appData.isLoading, // Desactiva si carregant
+                            child: FocusScope(
+                              onKeyEvent: (node, event) {
+                                //print("Key event: $event");
+                                if (event is KeyDownEvent &&
+                                    event.logicalKey ==
+                                        LogicalKeyboardKey.delete &&
+                                    selectedDrawable != null) {
+                                  setState(() {
+                                    appData.deleteDrawable(selectedDrawable!);
+                                    selectedDrawable = null;
+
+                                    print("Removing $selectedDrawable");
+                                  });
+                                  return KeyEventResult.handled;
+                                }
+                                return KeyEventResult.ignored;
+                              },
+                              child: Focus(
+                                onKeyEvent: (node, event) {
+                                  //print("Key event in FieldText: $event");
+                                  if (event is KeyDownEvent &&
+                                      event.logicalKey ==
+                                          LogicalKeyboardKey.delete &&
+                                      selectedDrawable != null) {
+                                    setState(() {
+                                      print("Removing $selectedDrawable");
+                                      appData.deleteDrawable(selectedDrawable!);
+                                      selectedDrawable = null;
+                                    });
+                                    return KeyEventResult.handled;
+                                  }
+                                  return KeyEventResult.ignored;
+                                },
+                                child: CDKFieldText(
+                                  maxLines: 5,
+                                  controller: textController,
+                                  placeholder: placeholders[
+                                      random.nextInt(placeholders.length)],
+                                  enabled: !appData
+                                      .isLoading, // Desactiva si carregant
+                                ),
+                              ),
                             ),
                           ),
                         ),

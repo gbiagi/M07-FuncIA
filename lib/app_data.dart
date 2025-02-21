@@ -42,6 +42,11 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteDrawable(Drawable drawable) {
+    drawables.remove(drawable);
+    notifyListeners();
+  }
+
   Future<void> callStream({required String question}) async {
     _isInitial = false;
     setLoading(true);
@@ -200,31 +205,44 @@ class AppData extends ChangeNotifier {
           final dy = parseDouble(parameters['y']);
           final radius = max(0.0, parseDouble(parameters['radius']));
           final color = (parameters['color']);
-          if (parameters["gradientType"] != null && 
-            parameters["gradientColor"] != null && 
-            parameters['fill'] != null && 
-            parameters['thickness'] != null)  {
-              final gradientType = (parameters['gradientType']);
-              final gradientColor = (parameters['gradientColor']);
-              final fill = (parameters['fill']);
-              final thickness = parseDouble(parameters['thickness']);
-              Gradient gradient;
-              switch (gradientType) {
-                case 'radial':
-                  gradient = RadialGradient(colors: [getColor(fill), getColor(gradientColor)]);
-                  break;
-                case 'linear':
-                  gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
-                  break;
-                case 'sweep':
-                  gradient = SweepGradient(colors: [getColor(fill), getColor(gradientColor)]);
-                  break;
-                default:
-                  gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
-                }
-                addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color), fill: getColor(fill), thickness: parseDouble(thickness), gradient: gradient));
+          if (parameters["gradientType"] != null &&
+              parameters["gradientColor"] != null &&
+              parameters['fill'] != null &&
+              parameters['thickness'] != null) {
+            final gradientType = (parameters['gradientType']);
+            final gradientColor = (parameters['gradientColor']);
+            final fill = (parameters['fill']);
+            final thickness = parseDouble(parameters['thickness']);
+            Gradient gradient;
+            switch (gradientType) {
+              case 'radial':
+                gradient = RadialGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              case 'linear':
+                gradient = LinearGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              case 'sweep':
+                gradient = SweepGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
+                break;
+              default:
+                gradient = LinearGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
+            }
+            addDrawable(Circle(
+                center: Offset(dx, dy),
+                radius: radius,
+                color: getColor(color),
+                fill: getColor(fill),
+                thickness: parseDouble(thickness),
+                gradient: gradient));
           } else {
-            addDrawable(Circle(center: Offset(dx, dy), radius: radius, color: getColor(color)));
+            addDrawable(Circle(
+                center: Offset(dx, dy),
+                radius: radius,
+                color: getColor(color)));
           }
         } else {
           print("Missing circle properties: $parameters");
@@ -244,7 +262,11 @@ class AppData extends ChangeNotifier {
           final end = Offset(endX, endY);
           final color = (parameters['color']);
           final thickness = parseDouble(parameters['thickness']);
-          addDrawable(Line(start: start, end: end, color: getColor(color), strokeWidth: thickness));
+          addDrawable(Line(
+              start: start,
+              end: end,
+              color: getColor(color),
+              strokeWidth: thickness));
         } else {
           print("Missing line properties: $parameters");
         }
@@ -263,28 +285,44 @@ class AppData extends ChangeNotifier {
           final bottomRight = Offset(bottomRightX, bottomRightY);
           final color = (parameters['color']);
           final thickness = parseDouble(parameters['thickness']);
-          if (parameters['fill'] != null && parameters['gradientType'] != null && parameters['gradientColor'] != null) {
+          if (parameters['fill'] != null &&
+              parameters['gradientType'] != null &&
+              parameters['gradientColor'] != null) {
             final fill = (parameters['fill']);
             final gradientType = (parameters['gradientType']);
             final gradientColor = (parameters['gradientColor']);
             Gradient gradient;
             switch (gradientType) {
               case 'radial':
-                gradient = RadialGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                gradient = RadialGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
                 break;
               case 'linear':
-                gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                gradient = LinearGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
                 break;
               case 'sweep':
-                gradient = SweepGradient(colors: [getColor(fill), getColor(gradientColor)]);
+                gradient = SweepGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
                 break;
               default:
-                gradient = LinearGradient(colors: [getColor(fill), getColor(gradientColor)]);
-              }
+                gradient = LinearGradient(
+                    colors: [getColor(fill), getColor(gradientColor)]);
+            }
 
-            addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness, fill: getColor(fill), gradient: gradient));  
+            addDrawable(Rectangle(
+                topLeft: topLeft,
+                bottomRight: bottomRight,
+                color: getColor(color),
+                strokeWidth: thickness,
+                fill: getColor(fill),
+                gradient: gradient));
           } else {
-            addDrawable(Rectangle(topLeft: topLeft, bottomRight: bottomRight, color: getColor(color), strokeWidth: thickness));
+            addDrawable(Rectangle(
+                topLeft: topLeft,
+                bottomRight: bottomRight,
+                color: getColor(color),
+                strokeWidth: thickness));
           }
         } else {
           print("Missing rectangle properties: $parameters");
@@ -299,18 +337,25 @@ class AppData extends ChangeNotifier {
           final dx = parseDouble(parameters['x']);
           final dy = parseDouble(parameters['y']);
           Offset position = Offset(dx, dy);
-          if (parameters['color'] != null && parameters['fontSize'] != null && parameters['font'] != null) {
+          if (parameters['color'] != null &&
+              parameters['fontSize'] != null &&
+              parameters['font'] != null) {
             final color = (parameters['color']);
             final fontSize = parseDouble(parameters['fontSize']);
             final font = (parameters['font']);
-            addDrawable(TextElement(position: position, text: text, color: getColor(color), fontSize: fontSize, font: font));
+            addDrawable(TextElement(
+                position: position,
+                text: text,
+                color: getColor(color),
+                fontSize: fontSize,
+                font: font));
           } else {
             addDrawable(TextElement(position: position, text: text));
           }
         } else {
           print("Missing text properties: $parameters");
         }
-      break;
+        break;
 
       default:
         print("Unknown function call: ${fixedJson['name']}");
@@ -320,30 +365,29 @@ class AppData extends ChangeNotifier {
   Color getColor(String color) {
     switch (color.toLowerCase()) {
       case 'red':
-      return Colors.red;
+        return Colors.red;
       case 'green':
-      return Colors.green;
+        return Colors.green;
       case 'blue':
-      return Colors.blue;
+        return Colors.blue;
       case 'yellow':
-      return Colors.yellow;
+        return Colors.yellow;
       case 'black':
-      return Colors.black;
+        return Colors.black;
       case 'white':
-      return Colors.white;
+        return Colors.white;
       case 'purple':
-      return Colors.purple;
+        return Colors.purple;
       case 'orange':
-      return Colors.orange;
+        return Colors.orange;
       case 'pink':
-      return Colors.pink;
+        return Colors.pink;
       case 'brown':
-      return Colors.brown;
+        return Colors.brown;
       case 'grey':
-      return Colors.grey;
+        return Colors.grey;
       default:
-      return Colors.transparent; // Default color if no match is found
+        return Colors.transparent; // Default color if no match is found
     }
   }
-  
 }
