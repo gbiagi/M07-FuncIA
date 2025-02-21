@@ -1,9 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
 import 'canvas_painter.dart';
+import 'drawable.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key, required this.title});
@@ -15,6 +18,8 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
+  Drawable? selectedDrawable;
+
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
@@ -43,11 +48,23 @@ class _LayoutState extends State<Layout> {
                     flex: 2,
                     child: Container(
                       color: CupertinoColors.systemGrey5,
-                      child: CustomPaint(
-                        painter: CanvasPainter(
-                          drawables: appData.drawables,
+                      child: GestureDetector(
+                        onTapDown: (details) {
+                          setState(() {
+                            final painter =
+                                CanvasPainter(drawables: appData.drawables);
+                            painter.selectDrawable(details.localPosition);
+                            selectedDrawable = painter.selectedDrawable;
+                            print("Selected $selectedDrawable");
+                          });
+                        },
+                        child: CustomPaint(
+                          painter: CanvasPainter(
+                            drawables: appData.drawables,
+                            selectedDrawable: selectedDrawable,
+                          ),
+                          child: Container(),
                         ),
-                        child: Container(),
                       ),
                     ),
                   ),

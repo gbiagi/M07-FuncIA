@@ -1,4 +1,4 @@
-draw rectangle x=10, y=	20 and x=100, y=200, color=yellow, thickness=15, gradient=linear, gradientColor=purple, fill= green
+draw rectangle x=10, y=	20 and x=100, y=200, color=red, thickness=15, gradient=linear, gradientColor=purple, fill= green
 
 draw circle x=400, y=500, r=65, color= green, fill=red, gradient= linear, gradientcolor=blue, thickness=5
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 abstract class Drawable {
   void draw(Canvas canvas);
+  bool contains(Offset position);
+  Rect getBounds();
 }
 
 class Line extends Drawable {
@@ -24,6 +26,19 @@ class Line extends Drawable {
       ..strokeWidth = strokeWidth;
     canvas.drawLine(start, end, paint);
   }
+
+  @override
+  bool contains(Offset position) {
+    // Check if the position is close to the line segment
+    double distance = (position - start).distance + (position - end).distance;
+    double lineLength = (start - end).distance;
+    return (distance - lineLength).abs() < strokeWidth;
+  }
+
+  @override
+  Rect getBounds() {
+    return Rect.fromPoints(start, end).inflate(strokeWidth / 2);
+  }
 }
 
 class Rectangle extends Drawable {
@@ -40,7 +55,8 @@ class Rectangle extends Drawable {
     required this.color,
     required this.strokeWidth,
     this.fill = Colors.transparent,
-    this.gradient = const LinearGradient(colors: [Colors.transparent, Colors.transparent]),
+    this.gradient =
+        const LinearGradient(colors: [Colors.transparent, Colors.transparent]),
   });
 
   @override
@@ -58,6 +74,17 @@ class Rectangle extends Drawable {
       ..strokeWidth = strokeWidth;
     canvas.drawRect(rect, borderPaint);
   }
+
+  @override
+  bool contains(Offset position) {
+    final rect = Rect.fromPoints(topLeft, bottomRight);
+    return rect.contains(position);
+  }
+
+  @override
+  Rect getBounds() {
+    return Rect.fromPoints(topLeft, bottomRight);
+  }
 }
 
 class Circle extends Drawable {
@@ -68,14 +95,14 @@ class Circle extends Drawable {
   final double thickness;
   final Gradient gradient;
 
-
   Circle({
     required this.center,
     required this.radius,
     required this.color,
     this.fill = Colors.transparent,
     this.thickness = 2.0,
-    this.gradient = const RadialGradient(colors: [Colors.transparent, Colors.transparent]),
+    this.gradient =
+        const RadialGradient(colors: [Colors.transparent, Colors.transparent]),
   });
 
   @override
@@ -91,6 +118,16 @@ class Circle extends Drawable {
       ..style = PaintingStyle.stroke
       ..strokeWidth = thickness;
     canvas.drawCircle(center, radius, borderPaint);
+  }
+
+  @override
+  bool contains(Offset position) {
+    return (position - center).distance <= radius;
+  }
+
+  @override
+  Rect getBounds() {
+    return Rect.fromCircle(center: center, radius: radius);
   }
 }
 
@@ -111,11 +148,8 @@ class TextElement extends Drawable {
 
   @override
   void draw(Canvas canvas) {
-    final textStyle = TextStyle(
-      color: color,
-      fontSize: fontSize,
-      fontFamily: font
-    );
+    final textStyle =
+        TextStyle(color: color, fontSize: fontSize, fontFamily: font);
     final textSpan = TextSpan(
       text: text,
       style: textStyle,
@@ -126,5 +160,38 @@ class TextElement extends Drawable {
     );
     textPainter.layout();
     textPainter.paint(canvas, position);
+  }
+
+  @override
+  bool contains(Offset position) {
+    final textStyle =
+        TextStyle(color: color, fontSize: fontSize, fontFamily: font);
+    final textSpan = TextSpan(
+      text: text,
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    final textRect = Offset(position.dx, position.dy) & textPainter.size;
+    return textRect.contains(position);
+  }
+
+  @override
+  Rect getBounds() {
+    final textStyle =
+        TextStyle(color: color, fontSize: fontSize, fontFamily: font);
+    final textSpan = TextSpan(
+      text: text,
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    return Offset(position.dx, position.dy) & textPainter.size;
   }
 }
