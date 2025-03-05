@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'app_data.dart';
 import 'canvas_painter.dart';
 import 'drawable.dart';
+import 'drawing_form.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key, required this.title});
@@ -194,6 +195,13 @@ class _LayoutState extends State<Layout> {
                   ),
                 ],
               ),
+              if (selectedDrawable != null)
+                Positioned(
+                  width: 300,
+                  bottom: 10,
+                  left: 10,
+                  child: DrawingForm(selectedDrawable: selectedDrawable!),
+                ),
               if (appData.isLoading)
                 Positioned.fill(
                   child: Container(

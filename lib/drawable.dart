@@ -10,8 +10,8 @@ abstract class Drawable {
 class Line extends Drawable {
   Offset start;
   Offset end;
-  final Color color;
-  final double strokeWidth;
+  Color color;
+  double strokeWidth;
 
   Line({
     required this.start,
@@ -46,14 +46,22 @@ class Line extends Drawable {
     start += offset;
     end += offset;
   }
+
+  void setColor(Color newColor) {
+    color = newColor;
+  }
+
+  void setStrokeWidth(double newStrokeWidth) {
+    strokeWidth = newStrokeWidth;
+  }
 }
 
 class Rectangle extends Drawable {
   Offset topLeft;
   Offset bottomRight;
-  final Color color;
-  final double strokeWidth;
-  final Color fill;
+  Color color;
+  double strokeWidth;
+  Color fill;
   final Gradient gradient;
 
   Rectangle({
@@ -61,10 +69,10 @@ class Rectangle extends Drawable {
     required this.bottomRight,
     required this.color,
     required this.strokeWidth,
-    this.fill = Colors.transparent,
-    this.gradient =
-        const LinearGradient(colors: [Colors.transparent, Colors.transparent]),
-  });
+    Color? fill,
+    Gradient? gradient,
+  })  : fill = fill ?? color,
+        gradient = gradient ?? LinearGradient(colors: [color, color]);
 
   @override
   void draw(Canvas canvas) {
@@ -90,7 +98,7 @@ class Rectangle extends Drawable {
 
   @override
   Rect getBounds() {
-    return Rect.fromPoints(topLeft, bottomRight);
+    return Rect.fromPoints(topLeft, bottomRight).inflate(strokeWidth / 2);
   }
 
   @override
@@ -98,25 +106,37 @@ class Rectangle extends Drawable {
     topLeft += offset;
     bottomRight += offset;
   }
+
+  void setColor(Color newColor) {
+    color = newColor;
+  }
+
+  void setStrokeWidth(double newStrokeWidth) {
+    strokeWidth = newStrokeWidth;
+  }
+
+  void setFill(Color newFill) {
+    fill = newFill;
+  }
 }
 
 class Circle extends Drawable {
   Offset center;
   final double radius;
-  final Color color;
-  final Color fill;
-  final double thickness;
+  Color color;
+  Color fill;
+  double thickness;
   final Gradient gradient;
 
   Circle({
     required this.center,
     required this.radius,
     required this.color,
-    this.fill = Colors.transparent,
+    Color? fill,
     this.thickness = 2.0,
-    this.gradient =
-        const RadialGradient(colors: [Colors.transparent, Colors.transparent]),
-  });
+    Gradient? gradient,
+  })  : fill = fill ?? color,
+        gradient = gradient ?? RadialGradient(colors: [color, color]);
 
   @override
   void draw(Canvas canvas) {
@@ -140,19 +160,31 @@ class Circle extends Drawable {
 
   @override
   Rect getBounds() {
-    return Rect.fromCircle(center: center, radius: radius);
+    return Rect.fromCircle(center: center, radius: radius + 5);
   }
 
   @override
   void move(Offset offset) {
     center += offset;
   }
+
+  void setColor(Color newColor) {
+    color = newColor;
+  }
+
+  void setStrokeWidth(double newStrokeWidth) {
+    thickness = newStrokeWidth;
+  }
+
+  void setFill(Color newFill) {
+    fill = newFill;
+  }
 }
 
 class TextElement extends Drawable {
-  final String text;
+  String text;
   Offset position;
-  final Color color;
+  Color color;
   final double fontSize;
   final String font;
 
@@ -216,5 +248,9 @@ class TextElement extends Drawable {
   @override
   void move(Offset offset) {
     position += offset;
+  }
+
+  void setColor(Color newColor) {
+    color = newColor;
   }
 }
