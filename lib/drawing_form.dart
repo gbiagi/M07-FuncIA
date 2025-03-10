@@ -1,4 +1,9 @@
+import 'package:exemple0700/app.dart';
+import 'package:exemple0700/app_data.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_desktop_kit/cdk.dart';
+import 'package:provider/provider.dart';
 import 'drawable.dart';
 
 class DrawingForm extends StatefulWidget {
@@ -12,9 +17,25 @@ class DrawingForm extends StatefulWidget {
 
 class _DrawingFormState extends State<DrawingForm> {
   Color selectedColor = CupertinoColors.black;
+  int _colorIndex = 0;
+
+  final colors = [
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Black',
+    'White',
+    'Purple',
+    'Orange',
+    'Pink',
+    'Brown',
+    'Grey'
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final appData = Provider.of<AppData>(context);
     return CupertinoPopupSurface(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -22,25 +43,27 @@ class _DrawingFormState extends State<DrawingForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.selectedDrawable is Line)
-              ..._buildLineOptions(widget.selectedDrawable as Line),
+              ..._buildLineOptions(widget.selectedDrawable as Line, appData),
             if (widget.selectedDrawable is Rectangle)
-              ..._buildRectangleOptions(widget.selectedDrawable as Rectangle),
+              ..._buildRectangleOptions(
+                  widget.selectedDrawable as Rectangle, appData),
             if (widget.selectedDrawable is Circle)
-              ..._buildCircleOptions(widget.selectedDrawable as Circle),
+              ..._buildCircleOptions(
+                  widget.selectedDrawable as Circle, appData),
             if (widget.selectedDrawable is TextElement)
               ..._buildTextElementOptions(
-                  widget.selectedDrawable as TextElement),
+                  widget.selectedDrawable as TextElement, appData),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildLineOptions(Line line) {
+  List<Widget> _buildLineOptions(Line line, AppData appData) {
     return [
       const Text('Line Options', style: TextStyle(fontWeight: FontWeight.bold)),
       CupertinoTextField(
-        placeholder: 'Enter start X',
+        placeholder: line.start.dx.toString(),
         keyboardType: TextInputType.number,
         onChanged: (value) {
           setState(() => line.start =
@@ -48,7 +71,7 @@ class _DrawingFormState extends State<DrawingForm> {
         },
       ),
       CupertinoTextField(
-        placeholder: 'Enter start Y',
+        placeholder: line.start.dy.toString(),
         keyboardType: TextInputType.number,
         onChanged: (value) {
           setState(() => line.start =
@@ -56,7 +79,7 @@ class _DrawingFormState extends State<DrawingForm> {
         },
       ),
       CupertinoTextField(
-        placeholder: 'Enter end X',
+        placeholder: line.end.dx.toString(),
         keyboardType: TextInputType.number,
         onChanged: (value) {
           setState(() => line.end =
@@ -64,19 +87,28 @@ class _DrawingFormState extends State<DrawingForm> {
         },
       ),
       CupertinoTextField(
-        placeholder: 'Enter end Y',
+        placeholder: line.end.dy.toString(),
         keyboardType: TextInputType.number,
         onChanged: (value) {
           setState(() => line.end =
               Offset(line.end.dx, double.tryParse(value) ?? line.end.dy));
         },
       ),
-      _buildColorPicker(
-          line.color, (newColor) => setState(() => line.setColor(newColor))),
+      const Text('Color', style: TextStyle(fontWeight: FontWeight.bold)),
+      CDKButtonSelect(
+        options: colors,
+        selectedIndex: _colorIndex,
+        onSelected: (int index) {
+          setState(() {
+            _colorIndex = index;
+            line.setColor(appData.getColor(colors[index]));
+          });
+        },
+      )
     ];
   }
 
-  List<Widget> _buildRectangleOptions(Rectangle rectangle) {
+  List<Widget> _buildRectangleOptions(Rectangle rectangle, AppData appData) {
     return [
       const Text('Rectangle Options',
           style: TextStyle(fontWeight: FontWeight.bold)),
@@ -88,12 +120,20 @@ class _DrawingFormState extends State<DrawingForm> {
           setState(() => rectangle.setStrokeWidth(value));
         },
       ),
-      _buildColorPicker(rectangle.color,
-          (newColor) => setState(() => rectangle.setColor(newColor))),
+      CDKButtonSelect(
+        options: colors,
+        selectedIndex: _colorIndex,
+        onSelected: (int index) {
+          setState(() {
+            _colorIndex = index;
+            rectangle.setColor(appData.getColor(colors[index]));
+          });
+        },
+      )
     ];
   }
 
-  List<Widget> _buildCircleOptions(Circle circle) {
+  List<Widget> _buildCircleOptions(Circle circle, AppData appData) {
     return [
       const Text('Circle Options',
           style: TextStyle(fontWeight: FontWeight.bold)),
@@ -105,32 +145,39 @@ class _DrawingFormState extends State<DrawingForm> {
           setState(() => circle.setStrokeWidth(value));
         },
       ),
-      _buildColorPicker(circle.color,
-          (newColor) => setState(() => circle.setColor(newColor))),
+      CDKButtonSelect(
+        options: colors,
+        selectedIndex: _colorIndex,
+        onSelected: (int index) {
+          setState(() {
+            _colorIndex = index;
+            circle.setColor(appData.getColor(colors[index]));
+          });
+        },
+      )
     ];
   }
 
-  List<Widget> _buildTextElementOptions(TextElement textElement) {
+  List<Widget> _buildTextElementOptions(
+      TextElement textElement, AppData appData) {
     return [
       const Text('Text Options', style: TextStyle(fontWeight: FontWeight.bold)),
       CupertinoTextField(
-        placeholder: 'Enter text',
+        placeholder: textElement.text,
         onChanged: (value) {
           setState(() => textElement.text = value);
         },
       ),
-      _buildColorPicker(textElement.color,
-          (newColor) => setState(() => textElement.setColor(newColor))),
+      CDKButtonSelect(
+        options: colors,
+        selectedIndex: _colorIndex,
+        onSelected: (int index) {
+          setState(() {
+            _colorIndex = index;
+            textElement.setColor(appData.getColor(colors[index]));
+          });
+        },
+      )
     ];
-  }
-
-  Widget _buildColorPicker(
-      Color currentColor, ValueChanged<Color> onColorSelected) {
-    return CupertinoButton(
-      child: Text('Select Color', style: TextStyle(color: currentColor)),
-      onPressed: () {
-        // You can implement a CupertinoPicker for color selection
-      },
-    );
   }
 }
