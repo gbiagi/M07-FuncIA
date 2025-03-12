@@ -5,7 +5,7 @@ const tools = [
     "function": {
       "name": "draw_circle",
       "description":
-          "Dibuixa un cercle amb un radi determinat, si falta el radi posar-ne un de 10 per defecte, si el radi ha de ser aletori posar-ne un aleatori entre 10 i 25",
+          "Dibuixa un cercle amb un radi determinat, si falta el radi posar-ne un de 10 per defecte, si el radi ha de ser aletori posar-ne un aleatori entre 10 i 25. Color default green",
       "parameters": {
         "type": "object",
         "properties": {
@@ -27,7 +27,7 @@ const tools = [
     "function": {
       "name": "draw_line",
       "description":
-          "Dibuixa una línia entre dos punts, si no s'especifica la posició escull els punts aleatòries entre x=10, y=10 i x=100, y=100",
+          "Dibuixa una línia entre dos punts, si no s'especifica la posició escull els punts aleatòries entre x=10, y=10 i x=100, y=100 y si no especifica color que sigui red amb gruix 5 ",
       "parameters": {
         "type": "object",
         "properties": {
@@ -61,7 +61,14 @@ const tools = [
           "gradientType": {"type": "string"},
           "gradientColor": {"type": "string"},
         },
-        "required": ["topLeftX", "topLeftY", "bottomRightX", "bottomRightY", "color", "thickness"]
+        "required": [
+          "topLeftX",
+          "topLeftY",
+          "bottomRightX",
+          "bottomRightY",
+          "color",
+          "thickness"
+        ]
       }
     }
   },
@@ -69,8 +76,7 @@ const tools = [
     "type": "function",
     "function": {
       "name": "draw_text",
-      "description":
-          "Dibuixa un text en una posició determinada",
+      "description": "Dibuixa un text en una posició determinada",
       "parameters": {
         "type": "object",
         "properties": {

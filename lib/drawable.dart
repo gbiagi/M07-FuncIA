@@ -160,7 +160,8 @@ class Circle extends Drawable {
 
   @override
   Rect getBounds() {
-    return Rect.fromCircle(center: center, radius: radius + 5);
+    return Rect.fromCircle(center: center, radius: radius + 5)
+        .inflate(thickness / 2);
   }
 
   @override
